@@ -52,5 +52,5 @@ python ringo.py --ddg_lang jp-jp --forvo_lang ja words.txt
 If a word wasn't found in either search, you can look at `images_not_found.txt` and `sounds_not_found.txt`. If you're feeling kind, you can request the sounds not found be added to Forvo.
 
 ### Bonus: Anki Usage
-When you're done downloading, you can move both images and sounds into your `collection.media` folder. (Stay tuned for a guide to cleaning up your Anki cards to automate everything nicely).
+When you're done downloading, you can move both images and sounds into your `collection.media` folder. See my [guide](https://www.momomori-eki.net/2021/12/02/how-to-learn-new-foreign-language-words/) to adding cards to Anki and taking advantage of ringo!
 
