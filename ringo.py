@@ -16,9 +16,12 @@ def main():
     parser = argparse.ArgumentParser(description="Read a text file of words and download images from \
         DuckDuckGo, sound from Forvo, or both. Requires API key for Forvo downloads.")
     parser.add_argument("words_file", help="Path to text file with words to query")
-    parser.add_argument("--ddg_lang", help="DuckDuckGo country/language code. Required if images flag is set.")
-    parser.add_argument("--forvo_lang", help="Forvo language code. Required if sounds flag is set.")
+    parser.add_argument("--ddg_lang", help="DuckDuckGo country/language code. Provide to retrieve images.")
+    parser.add_argument("--forvo_lang", help="Forvo language code. Provide to retrieve sounds.")
     args = parser.parse_args()
+
+    if not args.forvo_lang and not args.ddg_lang:
+        sys.stderr.write("You have not set any flags! See --help for usage.")
 
     if args.forvo_lang and not os.getenv("FORVO_API_KEY"):
         sys.stderr.write("If you set the sounds flag, you must set an environment variable called FORVO_API_KEY.")
