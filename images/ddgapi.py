@@ -73,16 +73,9 @@ def pick_random_image(objs, keyword):
     return image_saved
 
 def save_image(image_url, keyword):
-    # Most of the time, the extension is jpg/gif/png. Sometimes it's 'jpeg,' but saving it as .jpg works fine.
-    # Sometimes the extension isn't in the URL so you get some gibberish after the filename, but saving it
-    # as .jpg works almost all the time.
-    valid_extensions = ['jpg', 'gif', 'png']
-    extension = image_url.split("/")[-1].split(".")[-1]
-    if extension in valid_extensions:
-        extension_trim = extension[:3]
-    else:
-        extension_trim = 'jpg'
-    filename = keyword + "." + extension_trim
+    # Always save as ".jpg", no matter the original extension. This makes automating cards importing into Anki much easier.
+
+    filename = keyword + ".jpg"
     path = "images/" + filename
     try:
         r = requests.get(image_url, stream=True)
