@@ -16,19 +16,9 @@ def main():
     parser = argparse.ArgumentParser(description="Read a text file of words and download images from \
         DuckDuckGo, sound from Forvo, or both. Requires API key for Forvo downloads.")
     parser.add_argument("words_file", help="Path to text file with words to query")
-    parser.add_argument("--images", help="Set flag to query for images", dest="images", action="store_true")
-    parser.add_argument("--sounds", help="Set flag to query for sounds", dest="sounds", action="store_true")
     parser.add_argument("--ddg_lang", help="DuckDuckGo country/language code. Required if images flag is set.")
     parser.add_argument("--forvo_lang", help="Forvo language code. Required if sounds flag is set.")
     args = parser.parse_args()
-
-    if args.images and not args.ddg_lang:
-        sys.stderr.write("If you set the images flag, you must supply a valid DuckDuckGo country/language code.")
-        sys.exit()
-
-    if args.sounds and not args.forvo_lang:
-        sys.stderr.write("If you set the sounds flag, you must supply a valid Forvo language code.")
-        sys.exit()
 
     if args.forvo_lang and not os.getenv("FORVO_API_KEY"):
         sys.stderr.write("If you set the sounds flag, you must set an environment variable called FORVO_API_KEY.")
@@ -49,7 +39,7 @@ def main():
     images_not_found = open("images_not_found.txt", "w")
     sounds_not_found = open("sounds_not_found.txt", "w")
 
-    if args.images and args.sounds:
+    if args.ddg_lang and args.forvo_lang:
         for word in words:
             print("Retrieving image and sound for: ", word)
             image_found = search_image(word, args.ddg_lang)
@@ -61,7 +51,7 @@ def main():
                 print("Sound not found for ", word)
                 sounds_not_found.write(word+ "\n")
 
-    if args.images and not args.sounds:
+    if args.ddg_lang and not args.forvo_lang:
         for word in words:
             print("Retrieving image for: ", word)
             image_found = search_image(word, args.ddg_lang)
@@ -69,7 +59,7 @@ def main():
                 print("Image not found for ", word)
                 images_not_found.write(word + "\n")
 
-    if args.sounds and not args.images:
+    if args.forvo_lang and not args.ddg_lang:
         for word in words:
             print("Retrieving sound for: ", word)
             sound_found = search_sound(word, args.forvo_lang)

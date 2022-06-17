@@ -9,7 +9,7 @@ from random import randint
 def search_image(keywords, country_code, max_results=None):
     url = 'https://duckduckgo.com/'
     params = {
-    	'q': keywords
+        'q': keywords
     };
 
     #   First make a request to above URL, and parse out the 'vqd'
@@ -52,7 +52,8 @@ def search_image(keywords, country_code, max_results=None):
             res = requests.get(request_url, headers=headers, params=params)
             data = json.loads(res.text)
             break
-        except (ValueError, ConnectionError) as e:
+        except (ValueError, ConnectionError, TimeoutError) as e:
+            print("Sleeping...")
             time.sleep(5)
             continue
 
@@ -61,6 +62,7 @@ def search_image(keywords, country_code, max_results=None):
         if image_saved:
             return True
         else:
+            print("Trying again...")
             pick_random_image(data["results"], keywords)
     else:
         return False
@@ -93,5 +95,5 @@ def save_image(image_url, keyword):
 
         print("Image saved: ", filename)
         return True
-    except (requests.HTTPError, requests.exceptions.SSLError, requests.exceptions.ConnectionError):
+    except (requests.HTTPError, requests.exceptions.SSLError, requests.exceptions.ConnectionError, TimeoutError, requests.exceptions.ReadTimeout):
         return False
