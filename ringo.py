@@ -1,5 +1,8 @@
 import argparse
 import os
+import random
+import requests
+import shutil
 import sys
 
 # take in a list of words in txt format, convert to list
@@ -7,10 +10,54 @@ import sys
 # for every item in the list, go to forvo and get a random recording, save to sounds dir
 # if no result, write out to a text file
 
-from images.ddgapi import search_image
+from duckduckgo_search import DDGS
 from images.ddglangs import DDG_COUNTRIES
 from sounds.forvoapi import search_sound
 from sounds.forvolangs import FORVO_LANG_CODES
+
+def search_image(word, ddg_lang):
+    ddgs = DDGS()
+
+    ddgs_images_gen = ddgs.images(
+        word,
+        region=ddg_lang,
+        safesearch="On",
+        size=None,
+        color="color",
+        type_image=None,
+        layout=None,
+        license_image=None,
+    )
+
+    first_ten_results = []
+
+    result_counter = 0
+    while result_counter < 11:
+        for r in ddgs_images_gen:
+            first_ten_results.append(r)
+            result_counter += 1
+
+    image_found = save_image(random.choice(first_ten_results)["image"], word)
+    return image_found
+
+def save_image(image_url, keyword):
+    # Always save as ".jpg", no matter the original extension. This makes automating cards importing into Anki much easier.
+
+    filename = keyword + ".jpg"
+    path = "images/" + filename
+    try:
+        r = requests.get(image_url, stream=True)
+        r.raise_for_status()
+
+        r.raw.decode_content = True
+
+        with open(path, 'wb') as f:
+            shutil.copyfileobj(r.raw, f)
+
+        print("Image saved: ", filename)
+        return True
+    except (requests.HTTPError, requests.exceptions.SSLError, requests.exceptions.ConnectionError, TimeoutError, requests.exceptions.ReadTimeout):
+        return False
 
 def main():
     parser = argparse.ArgumentParser(description="Read a text file of words and download images from \
