@@ -19,9 +19,9 @@ def search_image(word, ddg_lang):
     ddgs = DDGS()
 
     ddgs_images_gen = ddgs.images(
-        word,
+        keywords=word,
         region=ddg_lang,
-        safesearch="On",
+        safesearch="on",
         size=None,
         color="color",
         type_image=None,
