@@ -9,7 +9,7 @@ from random import randint
 def search_sound(word, language_code):
     url = 'https://apifree.forvo.com/key/' + os.environ.get('FORVO_API_KEY') + '/format/json/action/word-pronunciations/word/' + word + '/language/' + language_code
 
-    res = requests.get(url)
+    res = requests.get(url, verify='forvo-com-chain.pem')
     data = json.loads(res.text)
 
     # save a random production to sounds/ directory
@@ -21,8 +21,8 @@ def search_sound(word, language_code):
 
 def save_sound(url, keyword):
     filename = keyword + ".mp3"
-    path = "sounds/" + filename
-    r = requests.get(url, stream=True)
+    path = "sounds/files/" + filename
+    r = requests.get(url, stream=True, verify='forvo-com-chain.pem')
     if r.status_code == 200:
         r.raw.decode_content = True
 

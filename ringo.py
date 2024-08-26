@@ -27,24 +27,25 @@ def search_image(word, ddg_lang):
         type_image=None,
         layout=None,
         license_image=None,
+        max_results=10
     )
 
-    first_ten_results = []
+    # first_ten_results = []
 
-    result_counter = 0
-    while result_counter < 11:
-        for r in ddgs_images_gen:
-            first_ten_results.append(r)
-            result_counter += 1
+    # result_counter = 0
+    # while result_counter < 11:
+    #     for r in ddgs_images_gen:
+    #         first_ten_results.append(r)
+    #         result_counter += 1
 
-    image_found = save_image(random.choice(first_ten_results)["image"], word)
+    image_found = save_image(random.choice(ddgs_images_gen)["image"], word)
     return image_found
 
 def save_image(image_url, keyword):
     # Always save as ".jpg", no matter the original extension. This makes automating cards importing into Anki much easier.
 
     filename = keyword + ".jpg"
-    path = "images/" + filename
+    path = "images/files/" + filename
     try:
         r = requests.get(image_url, stream=True)
         r.raise_for_status()
